@@ -10,6 +10,8 @@ interface Todo {
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [input, setInput] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
 
   const addTodo = () => {
     if (input.trim() === "") return;
@@ -30,6 +32,27 @@ function App() {
 
   const deleteTodo = (id: number) => {
     setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
+  const startEditing = (id: number, text: string) => {
+    setEditingId(id);
+    setEditText(text);
+  };
+
+  const saveEdit = (id: number) => {
+    if (editText.trim() === "") return;
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, text: editText.trim() } : todo
+      )
+    );
+    setEditingId(null);
+    setEditText("");
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditText("");
   };
 
   return (
@@ -72,22 +95,62 @@ function App() {
                 key={todo.id}
                 className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 hover:shadow-sm transition"
               >
-                <span
-                  onClick={() => toggleTodo(todo.id)}
-                  className={`flex-1 cursor-pointer select-none ${
-                    todo.completed
-                      ? "line-through text-gray-400"
-                      : "text-gray-700"
-                  }`}
-                >
-                  {todo.text}
-                </span>
-                <button
-                  onClick={() => deleteTodo(todo.id)}
-                  className="ml-3 text-red-500 hover:text-red-700 transition"
-                >
-                  ✕
-                </button>
+                {editingId === todo.id ? (
+                  <>
+                    <input
+                      type="text"
+                      value={editText}
+                      onChange={(e) => setEditText(e.target.value)}
+                      className="flex-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      autoFocus
+                    />
+                    <div className="flex gap-2 ml-3">
+                      <button
+                        onClick={() => saveEdit(todo.id)}
+                        className="text-green-500 hover:text-green-700 transition"
+                        title="Save"
+                      >
+                        ✓
+                      </button>
+                      <button
+                        onClick={cancelEdit}
+                        className="text-gray-500 hover:text-gray-700 transition"
+                        title="Cancel"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span
+                      onClick={() => toggleTodo(todo.id)}
+                      className={`flex-1 cursor-pointer select-none ${
+                        todo.completed
+                          ? "line-through text-gray-400"
+                          : "text-gray-700"
+                      }`}
+                    >
+                      {todo.text}
+                    </span>
+                    <div className="flex gap-2 ml-3">
+                      <button
+                        onClick={() => startEditing(todo.id, todo.text)}
+                        className="text-blue-500 hover:text-blue-700 transition"
+                        title="Edit"
+                      >
+                        ✎
+                      </button>
+                      <button
+                        onClick={() => deleteTodo(todo.id)}
+                        className="text-red-500 hover:text-red-700 transition"
+                        title="Delete"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </>
+                )}
               </li>
             ))
           )}
