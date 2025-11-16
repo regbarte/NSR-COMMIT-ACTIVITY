@@ -5,19 +5,22 @@ interface Todo {
   id: number;
   text: string;
   completed: boolean;
+  dueDate: string;
 }
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [input, setInput] = useState("");
+  const [date, setDate] = useState("");
 
   const addTodo = () => {
-    if (input.trim() === "") return;
+    if (input.trim() === "" || date === "") return;
     setTodos([
       ...todos,
-      { id: Date.now(), text: input.trim(), completed: false },
+      { id: Date.now(), text: input.trim(), completed: false, dueDate: date },
     ]);
     setInput("");
+    setDate("");
   };
 
   const toggleTodo = (id: number) => {
@@ -52,6 +55,12 @@ function App() {
             placeholder="Add a new task..."
             className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
           <button
             onClick={addTodo}
             className="px-5 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition"
@@ -72,7 +81,7 @@ function App() {
                 key={todo.id}
                 className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 hover:shadow-sm transition"
               >
-                <span
+                <div
                   onClick={() => toggleTodo(todo.id)}
                   className={`flex-1 cursor-pointer select-none ${
                     todo.completed
@@ -80,8 +89,8 @@ function App() {
                       : "text-gray-700"
                   }`}
                 >
-                  {todo.text}
-                </span>
+                  {todo.text} <span className="text-sm text-gray-500">({todo.dueDate})</span>
+                </div>
                 <button
                   onClick={() => deleteTodo(todo.id)}
                   className="ml-3 text-red-500 hover:text-red-700 transition"
