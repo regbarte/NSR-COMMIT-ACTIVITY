@@ -33,58 +33,127 @@ function App() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      <section className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
+    <div
+      style={{
+        backgroundColor: "pink",
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        fontFamily: "Comic Sans MS",
+      }}
+    >
+      <div
+        style={{
+          width: "700px",
+          backgroundColor: "lime",
+          border: "10px dashed red",
+          padding: "50px",
+          boxShadow: "10px 10px 20px purple",
+        }}
+      >
         {/* Header */}
-        <header className="mb-6 text-center">
-          <h1 className="text-3xl font-bold text-gray-800">My Tasks</h1>
-          <p className="text-gray-500 mt-1">
-            Stay organized and productive with a clean, simple todo list.
-          </p>
-        </header>
+        <h1
+          style={{
+            fontSize: "60px",
+            color: "orange",
+            textAlign: "left",
+            marginBottom: "40px",
+          }}
+        >
+          My Tasks!!!
+        </h1>
+        <p
+          style={{
+            backgroundColor: "yellow",
+            color: "blue",
+            fontStyle: "italic",
+            padding: "10px",
+            border: "5px solid black",
+          }}
+        >
+        </p>
 
         {/* Input */}
-        <div className="flex gap-2 mb-4">
+        <div style={{ marginTop: "30px", marginBottom: "30px" }}>
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Add a new task..."
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            style={{
+              border: "5px solid green",
+              padding: "20px",
+              fontSize: "25px",
+              backgroundColor: "cyan",
+              width: "60%",
+            }}
           />
           <button
             onClick={addTodo}
-            className="px-5 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition"
+            style={{
+              marginLeft: "20px",
+              padding: "20px",
+              backgroundColor: "purple",
+              color: "orange",
+              fontSize: "30px",
+              borderRadius: "0px",
+              border: "5px dotted black",
+            }}
           >
-            Add
+            ADD HERE!!!
           </button>
         </div>
 
         {/* Task List */}
-        <ul className="space-y-3">
+        <ul style={{ listStyleType: "square", padding: "0" }}>
           {todos.length === 0 ? (
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center text-gray-500">
-              No tasks yet. Add one to get started!
+            <div
+              style={{
+                backgroundColor: "black",
+                color: "white",
+                padding: "30px",
+                textAlign: "center",
+                fontSize: "25px",
+              }}
+            >
+              No tasks yet. Ano ka tamad?!!!
             </div>
           ) : (
             todos.map((todo) => (
               <li
                 key={todo.id}
-                className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 hover:shadow-sm transition"
+                style={{
+                  margin: "25px",
+                  padding: "10px",
+                  border: "10px groove pink",
+                  backgroundColor: "lightgreen",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontSize: "22px",
+                }}
               >
                 <span
                   onClick={() => toggleTodo(todo.id)}
-                  className={`flex-1 cursor-pointer select-none ${
-                    todo.completed
-                      ? "line-through text-gray-400"
-                      : "text-gray-700"
-                  }`}
+                  style={{
+                    cursor: "pointer",
+                    textDecoration: todo.completed
+                      ? "underline overline line-through"
+                      : "none",
+                    color: todo.completed ? "brown" : "magenta",
+                  }}
                 >
                   {todo.text}
                 </span>
                 <button
                   onClick={() => deleteTodo(todo.id)}
-                  className="ml-3 text-red-500 hover:text-red-700 transition"
+                  style={{
+                    marginLeft: "20px",
+                    color: "red",
+                    fontSize: "25px",
+                    backgroundColor: "transparent",
+                    border: "none",
+                  }}
                 >
                   ✕
                 </button>
@@ -92,8 +161,8 @@ function App() {
             ))
           )}
         </ul>
-      </section>
-    </main>
+      </div>
+    </div>
   );
 }
 
