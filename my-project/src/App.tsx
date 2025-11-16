@@ -1,108 +1,73 @@
-import { useState } from "react";
+// I don’t even care about imports, just throw everything in
+import React from "react";
 import "./App.css";
 
-interface Todo {
-  id: number;
-  text: string;
-  completed: boolean;
-  dueDate: string;
-}
-
 function App() {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [input, setInput] = useState("");
-  const [date, setDate] = useState("");
+  // state is chaos, everything in one giant array of strings
+  const [stuff, setStuff] = React.useState<any>([]);
+  const [text, setText] = React.useState("");
+  const [date, setDate] = React.useState("");
 
-  const addTodo = () => {
-    if (input.trim() === "" || date === "") return;
-    setTodos([
-      ...todos,
-      { id: Date.now(), text: input.trim(), completed: false, dueDate: date },
-    ]);
-    setInput("");
-    setDate("");
-  };
+  // addTodo doesn’t check anything
+  function addTodo() {
+    setStuff(stuff.concat([{ id: Math.random(), t: text, done: false, d: date }]));
+    setText(""); // maybe clear, maybe not
+    // forgot to clear date, oh well... hehe
+  }
 
-  const toggleTodo = (id: number) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
-  };
+  // toggle is broken, mutates state directly
+  function toggleTodo(todo: any) {
+    todo.done = !todo.done;
+    setStuff([...stuff]); // hacky re-render
+  }
 
-  const deleteTodo = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-  };
+  // delete is slow and ugly
+  function deleteTodo(todo: any) {
+    setStuff(stuff.filter((x: any) => x !== todo));
+  }
 
   return (
-    <main className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      <section className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
-        {/* Header */}
-        <header className="mb-6 text-center">
-          <h1 className="text-3xl font-bold text-gray-800">My Tasks</h1>
-          <p className="text-gray-500 mt-1">
-            Stay organized and productive with a clean, simple todo list.
-          </p>
-        </header>
+    <div style={{ background: "pink", minHeight: "100vh" }}>
+      <h1>Tasks lol</h1>
+      <input value={text} onChange={(e) => setText(e.target.value)} />
+      <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+      <button onClick={addTodo}>Add</button>
 
-        {/* Input */}
-        <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Add a new task..."
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <button
-            onClick={addTodo}
-            className="px-5 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition"
-          >
-            Add
-          </button>
-        </div>
+      <ul>
+        {stuff.map((todo: any) => (
+          <li key={todo.id}>
+            <span
+              style={{
+                textDecoration: todo.done ? "line-through" : "none",
+                color: todo.done ? "gray" : "black",
+              }}
+              onClick={() => toggleTodo(todo)}
+            >
+              {todo.t} (due {todo.d})
+            </span>
+            <button onClick={() => deleteTodo(todo)}>X</button>
+          </li>
+        ))}
+      </ul>
 
-        {/* Task List */}
-        <ul className="space-y-3">
-          {todos.length === 0 ? (
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center text-gray-500">
-              No tasks yet. Add one to get started!
+      {/* Fake calendar: just dump dates in a grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "5px", marginTop: "20px" }}>
+        {Array.from({ length: 30 }).map((_, i) => (
+          <div key={i} style={{ border: "1px solid black", padding: "10px" }}>
+            {i + 1}
+            <div>
+              {stuff
+                .filter((t: any) => parseInt(t.d.split("-")[2]) === i + 1)
+                .map((t: any) => (
+                  <div key={t.id} style={{ fontSize: "10px" }}>
+                    {t.t}
+                  </div>
+                ))}
             </div>
-          ) : (
-            todos.map((todo) => (
-              <li
-                key={todo.id}
-                className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 hover:shadow-sm transition"
-              >
-                <div
-                  onClick={() => toggleTodo(todo.id)}
-                  className={`flex-1 cursor-pointer select-none ${
-                    todo.completed
-                      ? "line-through text-gray-400"
-                      : "text-gray-700"
-                  }`}
-                >
-                  {todo.text} <span className="text-sm text-gray-500">({todo.dueDate})</span>
-                </div>
-                <button
-                  onClick={() => deleteTodo(todo.id)}
-                  className="ml-3 text-red-500 hover:text-red-700 transition"
-                >
-                  ✕
-                </button>
-              </li>
-            ))
-          )}
-        </ul>
-      </section>
-    </main>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
