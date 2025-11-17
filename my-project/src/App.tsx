@@ -33,33 +33,19 @@ function App() {
   };
 
   const markComplete = (id: number) => {
-    let found = false;
-    const newTodos: Todo[] = [];
-    for (let i = 0; i < todos.length; i++) {
-      const t = todos[i];
-      if (t.id == id) {
-        found = true;
-        newTodos.push({ id: t.id, text: t.text, completed: true });
-      } else {
-        newTodos.push(t);
-      }
-    }
-    if (found) setTodos(newTodos);
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: true } : todo
+      )
+    );
   };
 
   const unmarkComplete = (id: number) => {
-    let found = false;
-    const newTodos: Todo[] = [];
-    for (let i = 0; i < todos.length; i++) {
-      const t = todos[i];
-      if (t.id == id) {
-        found = true;
-        newTodos.push({ id: t.id, text: t.text, completed: false });
-      } else {
-        newTodos.push(t);
-      }
-    }
-    if (found) setTodos(newTodos);
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: false } : todo
+      )
+    );
   };
 
   return (
