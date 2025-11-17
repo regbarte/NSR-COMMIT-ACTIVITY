@@ -29,10 +29,9 @@ function App() {
   return (
     <div style={{ background: "pink", minHeight: "100vh" }}>
       <h1>Tasks lol</h1>
-      // Added a todo form component
+      {/* Added a todo form component */}
       <TodoForm addTodo={addTodo} />
-
-      // Added a todo list component
+      {/* Added a todo list component */}
       <TodoList
         todos={todos}
         actions={{
@@ -41,8 +40,6 @@ function App() {
         }}
       />
       {/* Fake calendar: just dump dates in a grid */}
-
-      // Added a todo calendar component
       <TodoCalendar todos={todos} />
     </div>
   );
