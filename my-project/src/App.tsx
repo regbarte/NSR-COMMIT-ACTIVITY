@@ -1,5 +1,9 @@
 import { useState } from "react";
 import "./App.css";
+import TaskCard from "./components/TaskCard";
+import TaskInput from "./components/TaskInput";
+import EmptyState from "./components/EmptyState";
+import TaskStats from "./components/TaskStats";
 
 interface Todo {
   id: number;
@@ -32,135 +36,54 @@ function App() {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
-  return (
-    <div
-      style={{
-        backgroundColor: "pink",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        fontFamily: "Comic Sans MS",
-      }}
-    >
-      <div
-        style={{
-          width: "700px",
-          backgroundColor: "lime",
-          border: "10px dashed red",
-          padding: "50px",
-          boxShadow: "10px 10px 20px purple",
-        }}
-      >
-        {/* Header */}
-        <h1
-          style={{
-            fontSize: "60px",
-            color: "orange",
-            textAlign: "left",
-            marginBottom: "40px",
-          }}
-        >
-          My Tasks!!!
-        </h1>
-        <p
-          style={{
-            backgroundColor: "yellow",
-            color: "blue",
-            fontStyle: "italic",
-            padding: "10px",
-            border: "5px solid black",
-          }}
-        >
-        </p>
+  const completedCount = todos.filter((todo) => todo.completed).length;
+  const remainingCount = todos.length - completedCount;
 
-        {/* Input */}
-        <div style={{ marginTop: "30px", marginBottom: "30px" }}>
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Add a new task..."
-            style={{
-              border: "5px solid green",
-              padding: "20px",
-              fontSize: "25px",
-              backgroundColor: "cyan",
-              width: "60%",
-            }}
-          />
-          <button
-            onClick={addTodo}
-            style={{
-              marginLeft: "20px",
-              padding: "20px",
-              backgroundColor: "purple",
-              color: "orange",
-              fontSize: "30px",
-              borderRadius: "0px",
-              border: "5px dotted black",
-            }}
-          >
-            ADD HERE!!!
-          </button>
+  return (
+    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+            My To-Do List
+          </h1>
+          <p className="text-gray-600">Stay organized and productive</p>
         </div>
 
+        {/* Input Section */}
+        <TaskInput
+          value={input}
+          onChange={setInput}
+          onAdd={addTodo}
+          maxLength={100}
+        />
+
         {/* Task List */}
-        <ul style={{ listStyleType: "square", padding: "0" }}>
+        <div className="space-y-3">
           {todos.length === 0 ? (
-            <div
-              style={{
-                backgroundColor: "black",
-                color: "white",
-                padding: "30px",
-                textAlign: "center",
-                fontSize: "25px",
-              }}
-            >
-              No tasks yet. Ano ka tamad?!!!
-            </div>
+            <EmptyState />
           ) : (
-            todos.map((todo) => (
-              <li
-                key={todo.id}
-                style={{
-                  margin: "25px",
-                  padding: "10px",
-                  border: "10px groove pink",
-                  backgroundColor: "lightgreen",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  fontSize: "22px",
-                }}
-              >
-                <span
-                  onClick={() => toggleTodo(todo.id)}
-                  style={{
-                    cursor: "pointer",
-                    textDecoration: todo.completed
-                      ? "underline overline line-through"
-                      : "none",
-                    color: todo.completed ? "brown" : "magenta",
-                  }}
-                >
-                  {todo.text}
-                </span>
-                <button
-                  onClick={() => deleteTodo(todo.id)}
-                  style={{
-                    marginLeft: "20px",
-                    color: "red",
-                    fontSize: "25px",
-                    backgroundColor: "transparent",
-                    border: "none",
-                  }}
-                >
-                  ✕
-                </button>
-              </li>
-            ))
+            <ul className="space-y-2" role="list">
+              {todos.map((todo) => (
+                <TaskCard
+                  key={todo.id}
+                  id={todo.id}
+                  text={todo.text}
+                  completed={todo.completed}
+                  onToggle={toggleTodo}
+                  onDelete={deleteTodo}
+                />
+              ))}
+            </ul>
           )}
-        </ul>
+        </div>
+
+        {/* Footer Stats */}
+        <TaskStats
+          totalTasks={todos.length}
+          completedTasks={completedCount}
+          remainingTasks={remainingCount}
+        />
       </div>
     </div>
   );
