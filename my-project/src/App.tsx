@@ -29,44 +29,21 @@ function App() {
   return (
     <div style={{ background: "pink", minHeight: "100vh" }}>
       <h1>Tasks lol</h1>
-      <input value={text} onChange={(e) => setText(e.target.value)} />
-      <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-      <button onClick={addTodo}>Add</button>
+      // Added a todo form component
+      <TodoForm addTodo={addTodo} />
 
-      <ul>
-        {stuff.map((todo: any) => (
-          <li key={todo.id}>
-            <span
-              style={{
-                textDecoration: todo.done ? "line-through" : "none",
-                color: todo.done ? "gray" : "black",
-              }}
-              onClick={() => toggleTodo(todo)}
-            >
-              {todo.t} (due {todo.d})
-            </span>
-            <button onClick={() => deleteTodo(todo)}>X</button>
-          </li>
-        ))}
-      </ul>
-
+      // Added a todo list component
+      <TodoList
+        todos={todos}
+        actions={{
+          toggleTodo,
+          deleteTodo,
+        }}
+      />
       {/* Fake calendar: just dump dates in a grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "5px", marginTop: "20px" }}>
-        {Array.from({ length: 30 }).map((_, i) => (
-          <div key={i} style={{ border: "1px solid black", padding: "10px" }}>
-            {i + 1}
-            <div>
-              {stuff
-                .filter((t: any) => parseInt(t.d.split("-")[2]) === i + 1)
-                .map((t: any) => (
-                  <div key={t.id} style={{ fontSize: "10px" }}>
-                    {t.t}
-                  </div>
-                ))}
-            </div>
-          </div>
-        ))}
-      </div>
+
+      // Added a todo calendar component
+      <TodoCalendar todos={todos} />
     </div>
   );
 }
