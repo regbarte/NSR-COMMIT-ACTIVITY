@@ -14,7 +14,6 @@ function App() {
     });
   }
 
-  // toggle is broken, mutates state directly
   function toggleTodo(id: number) {
     setTodos(
       todos.map((todo) =>
@@ -23,7 +22,6 @@ function App() {
     );
   }
 
-  // delete is slow and ugly
   function deleteTodo(id: number) {
     setTodos(todos.filter((x: Todo) => x.id !== id));
   }
