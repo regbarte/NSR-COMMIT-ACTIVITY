@@ -32,6 +32,22 @@ function App() {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  const markComplete = (id: number) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: true } : todo
+      )
+    );
+  };
+
+  const unmarkComplete = (id: number) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: false } : todo
+      )
+    );
+  };
+
   return (
     <main className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
       <section className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
@@ -82,6 +98,22 @@ function App() {
                 >
                   {todo.text}
                 </span>
+                {!todo.completed && (
+                  <button
+                    onClick={() => markComplete(todo.id)}
+                    className="ml-2 px-2 py-1 bg-green-500 text-white text-sm rounded hover:bg-green-600"
+                  >
+                    Mark
+                  </button>
+                )}
+                {todo.completed && (
+                  <button
+                    onClick={() => unmarkComplete(todo.id)}
+                    className="ml-2 px-2 py-1 bg-yellow-500 text-white text-sm rounded hover:bg-yellow-600"
+                  >
+                    Unmark
+                  </button>
+                )}
                 <button
                   onClick={() => deleteTodo(todo.id)}
                   className="ml-3 text-red-500 hover:text-red-700 transition"
