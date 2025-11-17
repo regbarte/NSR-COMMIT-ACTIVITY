@@ -9,6 +9,8 @@ function App() {
   const [todos, setTodos] = React.useState<Todo[]>([]);
 
   function addTodo(text: string, date: string) {
+    if (!text) return;
+    if (text.trim() === "") return;
     setTodos((prev) => {
       return [...prev, { id: Math.random(), t: text, done: false, d: date }];
     });
