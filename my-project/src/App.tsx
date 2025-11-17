@@ -5,19 +5,27 @@ interface Todo {
   id: number;
   text: string;
   completed: boolean;
+  priority: "high" | "low";
 }
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [input, setInput] = useState("");
+  const [priority, setPriority] = useState<"high" | "low">("low");
 
   const addTodo = () => {
     if (input.trim() === "") return;
     setTodos([
       ...todos,
-      { id: Date.now(), text: input.trim(), completed: false },
+      {
+        id: Date.now(),
+        text: input.trim(),
+        completed: false,
+        priority: priority,
+      },
     ]);
     setInput("");
+    setPriority("low");
   };
 
   const toggleTodo = (id: number) => {
@@ -52,6 +60,21 @@ function App() {
             placeholder="Add a new task..."
             className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
+
+          <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value as "high" | "low")}
+            className="px-2 py-2 border border-gray-300 rounded-lg"
+          >
+            <option value="low">
+              Low
+            </option>
+            
+            <option value="high">
+              High
+            </option>
+          </select>
+
           <button
             onClick={addTodo}
             className="px-5 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition"
@@ -74,12 +97,21 @@ function App() {
               >
                 <span
                   onClick={() => toggleTodo(todo.id)}
-                  className={`flex-1 cursor-pointer select-none ${
+                  className={`flex items-center gap-2 flex-1 cursor-pointer select-none ${
                     todo.completed
                       ? "line-through text-gray-400"
                       : "text-gray-700"
                   }`}
                 >
+                  {todo.priority === "high" ? (
+                    <span className="px-2 py-1 text-xs bg-red-100 text-red-600 rounded-md border border-red-300">
+                      HIGH
+                    </span>
+                  ) : (
+                    <span className="px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded-md border border-gray-300">
+                      LOW
+                    </span>
+                  )}
                   {todo.text}
                 </span>
                 <button
