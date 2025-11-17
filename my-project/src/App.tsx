@@ -1,29 +1,31 @@
-// I don’t even care about imports, just throw everything in
 import React from "react";
 import "./App.css";
+import type { Todo } from "./types/Todo";
+import TodoForm from "./components/TodoForm";
+import TodoCalendar from "./components/TodoCalendar";
+import TodoList from "./components/TodoList";
 
 function App() {
-  // state is chaos, everything in one giant array of strings
-  const [stuff, setStuff] = React.useState<any>([]);
-  const [text, setText] = React.useState("");
-  const [date, setDate] = React.useState("");
+  const [todos, setTodos] = React.useState<Todo[]>([]);
 
-  // addTodo doesn’t check anything
-  function addTodo() {
-    setStuff(stuff.concat([{ id: Math.random(), t: text, done: false, d: date }]));
-    setText(""); // maybe clear, maybe not
-    // forgot to clear date, oh well... hehe
+  function addTodo(text: string, date: string) {
+    setTodos((prev) => {
+      return [...prev, { id: Math.random(), t: text, done: false, d: date }];
+    });
   }
 
   // toggle is broken, mutates state directly
-  function toggleTodo(todo: any) {
-    todo.done = !todo.done;
-    setStuff([...stuff]); // hacky re-render
+  function toggleTodo(id: number) {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, done: !todo.done } : todo
+      )
+    );
   }
 
   // delete is slow and ugly
-  function deleteTodo(todo: any) {
-    setStuff(stuff.filter((x: any) => x !== todo));
+  function deleteTodo(id: number) {
+    setTodos(todos.filter((x: Todo) => x.id !== id));
   }
 
   return (
